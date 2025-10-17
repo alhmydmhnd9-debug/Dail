@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>روتيني اليومي الصحي</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 2.5em;
+        }
+        
+        .date-display {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+        }
+        
+        .stat-card h3 {
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            opacity: 0.9;
+        }
+        
+        .stat-card .value {
+            font-size: 2em;
+            font-weight: bold;
+        }
+        
+        .schedule {
+            margin-bottom: 30px;
+        }
+        
+        .task {
+            background: #f8f9ff;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border-right: 5px solid #667eea;
+            transition: all 0.3s;
+        }
+        
+        .task:hover {
+            transform: translateX(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        
+        .task.completed {
+            opacity: 0.6;
+            border-right-color: #4caf50;
+        }
+        
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+        
+        .task-time {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+        
+        .task-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 8px;
+        }
+        
+        .task-suggestion {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            margin-top: 10px;
+            border-right: 3px solid #ffd700;
+        }
+        
+        .suggestion-label {
+            color: #f39c12;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
+        }
+        
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .checkbox {
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+        }
+        
+        .extra-tasks {
+            background: #fff3cd;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+        }
+        
+        .extra-tasks h2 {
+            color: #856404;
+            margin-bottom: 15px;
+        }
+        
+        .extra-task-item {
+            background: white;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .btn-refresh {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            margin: 20px auto;
+            display: block;
+            transition: transform 0.3s;
+        }
+        
+        .btn-refresh:hover {
+            transform: scale(1.05);
+        }
+        
+        .prayer-icon {
+            color: #4caf50;
+            margin-left: 5px;
+        }
+        
+        .rewards-section {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            color: white;
+        }
+        
+        .rewards-section h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .reward-item {
+            background: rgba(255,255,255,0.2);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .reward-points {
+            background: #ffd700;
+            color: #333;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 15px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #4caf50, #8bc34a);
+            transition: width 0.5s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .pomodoro-timer {
+            background: #ff6b6b;
+            color: white;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 10px 0;
+            font-size: 1.2em;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌟 روتيني اليومي الصحي</h1>
+        <div class="date-display" id="dateDisplay"></div>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <h3>ساعات النوم</h3>
+                <div class="value">9 ساعات</div>
+            </div>
+            <div class="stat-card">
+                <h3>ساعات المذاكرة</h3>
+                <div class="value">6 ساعات</div>
+            </div>
+            <div class="stat-card">
+                <h3>وقت الجوال</h3>
+                <div class="value">3 ساعات</div>
+            </div>
+            <div class="stat-card">
+                <h3>الصلوات</h3>
+                <div class="value">5 صلوات</div>
+            </div>
+        </div>
+        
+        <div class="rewards-section">
+            <h2>🏆 نظام الحوافز والمكافآت - للمهندس المنضبط</h2>
+            
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: 0%">
+                    <span id="progressText">0/25 مهمة</span>
+                </div>
+            </div>
+            
+            <div style="margin-top: 20px;">
+                <h3 style="margin-bottom: 15px;">🎁 المكافآت حسب الإنجاز:</h3>
+                
+                <div class="reward-item">
+                    <span>✅ إكمال 5 مهام → راحة إضافية 15 دقيقة</span>
+                    <div class="reward-points">5 نقاط</div>
+                </div>
+                
+                <div class="reward-item">
+                    <span>🎯 إكمال 10 مهام → شاهد حلقة مسلسل/فيلم قصير</span>
+                    <div class="reward-points">10 نقاط</div>
+                </div>
+                
+                <div class="reward-item">
+                    <span>🍕 إكمال 15 مهمة → اطلب وجبتك المفضلة</span>
+                    <div class="reward-points">15 نقطة</div>
+                </div>
+                
+                <div class="reward-item">
+                    <span>🎮 إكمال اليوم كامل (25 مهمة) → العب ساعة إضافية</span>
+                    <div class="reward-points">25 نقطة</div>
+                </div>
+                
+                <div class="reward-item">
+                    <span>⭐ 7 أيام انضباط متواصل → يوم حر كامل أو رحلة</span>
+                    <div class="reward-points">175 نقطة</div>
+                </div>
+                
+                <div class="reward-item">
+                    <span>🏅 30 يوم انضباط → اشتري جهاز أو شيء تحبه</span>
+                    <div class="reward-points">750 نقطة</div>
+                </div>
+            </div>
+            
+            <div style="margin-top: 25px; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 10px;">
+                <h3>💪 تحفيزات للمهندس:</h3>
+                <p style="margin: 8px 0;">• كل يوم انضباط يقربك من النجاح في مشاريعك الهندسية</p>
+                <p style="margin: 8px 0;">• المهندس الناجح = الانضباط + العلم + المثابرة</p>
+                <p style="margin: 8px 0;">• روتينك الصحي = عقل صافي = تصاميم هندسية أفضل</p>
+                <p style="margin: 8px 0;">• أنت تبني مستقبلك كما تبني الدوائر الكهربائية... خطوة بخطوة</p>
+            </div>
+        </div>
+
+        <div class="schedule" id="schedule"></div>
+        
+        <div class="extra-tasks">
+            <h2>📝 المهام اليومية الإضافية</h2>
+            <div id="extraTasksList"></div>
+        </div>
+        
+        <button class="btn-refresh" onclick="refreshSuggestions()">🔄 تغيير الاقتراحات اليومية</button>
+    </div>
+
+    <script>
+        const breakfastOptions = [
+            "بيض مسلوق (2-3 بيضات) + خبز أسمر + خيار وطماطم",
+            "تونة + خبز أسمر + سلطة خضراء",
+            "فول مدمس + زيت زيتون + خبز أسمر",
+            "شكشوكة (بيض بالطماطم) + خبز",
+            "لبنة + زيت زيتون + زعتر + خبز أسمر",
+            "جبن قريش + خضار طازجة + خبز",
+            "عجة بيض بالخضار + خبز أسمر"
+        ];
+
+        const lunchOptions = [
+            "صدر دجاج مشوي + أرز بني + سلطة",
+            "سمك مشوي + خضار مطبوخة + أرز",
+            "لحم بقري مسلوق + خضار + أرز أو معكرونة",
+            "كبسة دجاج (كمية معتدلة) + سلطة",
+            "مرقوق أو مطازيز (باللحم) + لبن",
+            "مندي دجاج + سلطة خضراء",
+            "يخنة لحم بالخضار + أرز بني"
+        ];
+
+        const dinnerOptions = [
+            "شوربة خضار + قطعة خبز أسمر + فواكه",
+            "زبادي + عسل + فواكه مقطعة",
+            "سلطة تونة + خبز أسمر",
+            "عجة بيض خفيفة + سلطة",
+            "شوربة عدس + خبز أسمر",
+            "جبن + خضار طازجة + خبز",
+            "حمص + زيت زيتون + خبز"
+        ];
+
+        const exercises = [
+            "20 تمرين ضغط (Push-ups) + 30 قرفصاء (Squats) + تمدد",
+            "تمارين بطن: 30 كرانش + 20 رفع أرجل + تمدد",
+            "30 نط بفتح الرجلين (Jumping Jacks) + 20 بيربي + تمدد",
+            "المشي في المكان 5 دقائق + 25 قرفصاء + تمدد",
+            "تمارين الذراعين: 20 ضغط + 15 عقلة (إن أمكن) + تمدد",
+            "يوغا صباحية: وضعية الكلب + القطة + تحية الشمس",
+            "كارديو خفيف: نط الحبل 5 دقائق + تمدد"
+        ];
+
+        const prayerTimes = {
+            fajr: "05:15 ص",
+            dhuhr: "12:00 م",
+            asr: "03:15 م",
+            maghrib: "05:50 م",
+            isha: "07:20 م"
+        };
+        
+        function convertTo12Hour(time24) {
+            let [hours, minutes] = time24.split(':');
+            hours = parseInt(hours);
+            const suffix = hours >= 12 ? 'م' : 'ص';
+            hours = hours % 12 || 12;
+            return `${hours.toString().padStart(2, '0')}:${minutes} ${suffix}`;
+        }
+
+        let dailyIndex = new Date().getDate() % 7;
+
+        const dailySchedule = [
+            { time: "07:00 ص", title: "⏰ الاستيقاظ", task: "استيقظ مباشرة عند سماع المنبه" },
+            { time: "07:02 ص", title: "🛏️ ترتيب الفراش", task: "رتب فراشك فوراً بعد الاستيقاظ" },
+            { time: "07:05 ص", title: "🚽 دخول الحمام", task: "قضاء الحاجة والاستعداد" },
+            { time: "07:10 ص", title: "💪 تمرين صباحي", task: "10 دقائق", type: "exercise" },
+            { time: "07:20 ص", title: "🦷 النظافة الصباحية", task: "فرش أسنانك ووجهك واستحم" },
+            { time: prayerTimes.fajr, title: "🕌 صلاة الفجر", task: "صلاة الفجر", prayer: true },
+            { time: "07:45 ص", title: "🍳 وجبة الفطور", task: "30 دقيقة (يشمل استخدام الجوال)", type: "breakfast", phone: true },
+            { time: "08:15 ص", title: "📚 مذاكرة - جلسة 1 (بومودورو 1)", task: "30 دقيقة مذاكرة مركزة" },
+            { time: "08:45 ص", title: "☕ راحة قصيرة", task: "5 دقائق راحة" },
+            { time: "08:50 ص", title: "📚 مذاكرة - جلسة 1 (بومودورو 2)", task: "30 دقيقة مذاكرة" },
+            { time: "09:20 ص", title: "☕ راحة قصيرة", task: "5 دقائق راحة" },
+            { time: "09:25 ص", title: "📚 مذاكرة - جلسة 1 (بومودورو 3)", task: "30 دقيقة مذاكرة" },
+            { time: "09:55 ص", title: "☕ راحة قصيرة", task: "5 دقائق راحة" },
+            { time: "10:00 ص", title: "📚 مذاكرة - جلسة 1 (بومودورو 4)", task: "30 دقيقة مذاكرة - آخر بومودورو قبل الراحة الطويلة" },
+            { time: "10:30 ص", title: "☕ استراحة طويلة", task: "20 دقيقة راحة + شرب ماء + تمدد" },
+            { time: "10:50 ص", title: "📖 مذاكرة - جلسة 2 (بومودورو 1)", task: "30 دقيقة مذاكرة" },
+            { time: "11:20 ص", title: "☕ راحة قصيرة", task: "5 دقائق راحة" },
+            { time: "11:25 ص", title: "📖 مذاكرة - جلسة 2 (بومودورو 2)", task: "30 دقيقة مذاكرة" },
+            { time: "11:55 ص", title: "☕ راحة قصيرة", task: "5 دقائق راحة" },
+            { time: prayerTimes.dhuhr, title: "🕌 صلاة الظهر", task: "صلاة الظهر", prayer: true },
+            { time: "12:30 م", title: "🍽️ وجبة الغداء", task: "30 دقيقة (يشمل استخدام الجوال)", type: "lunch", phone: true },
+            { time: "01:00 م", title: "📚 مذاكرة - جلسة 3 (بومودورو 1)", task: "30 دقيقة مذاكرة" },
+            { time: "01:30 م", title: "☕ راحة قصيرة", task: "5 دقائق راحة" },
+            { time: "01:35 م", title: "📚 مذاكرة - جلسة 3 (بومودورو 2)", task: "30 دقيقة مذاكرة" },
+            { time: "02:05 م", title: "☕ راحة قصيرة", task: "5 دقائق راحة" },
+            { time: "02:10 م", title: "📚 مذاكرة - جلسة 3 (بومودورو 3)", task: "30 دقيقة مذاكرة" },
+            { time: "02:40 م", title: "☕ راحة قصيرة", task: "5 دقائق راحة" },
+            { time: "02:45 م", title: "📚 مذاكرة - جلسة 3 (بومودورو 4)", task: "30 دقيقة مذاكرة" },
+            { time: prayerTimes.asr, title: "🕌 صلاة العصر", task: "صلاة العصر", prayer: true },
+            { time: "03:30 م", title: "🚶 نشاط حركي", task: "مشي خفيف أو تمارين تمدد 15 دقيقة" },
+            { time: "03:45 م", title: "📱 وقت حر للجوال", task: "ساعة للترفيه والتواصل" },
+            { time: "04:45 م", title: "📚 مراجعة (بومودورو 1)", task: "30 دقيقة مراجعة" },
+            { time: "05:15 م", title: "☕ راحة قصيرة", task: "5 دقائق راحة" },
+            { time: "05:20 م", title: "📚 مراجعة (بومودورو 2)", task: "30 دقيقة مراجعة" },
+            { time: prayerTimes.maghrib, title: "🕌 صلاة المغرب", task: "صلاة المغرب", prayer: true },
+            { time: "06:15 م", title: "🍲 وجبة العشاء", task: "30 دقيقة (يشمل استخدام الجوال)", type: "dinner", phone: true },
+            { time: "06:45 م", title: "📚 مذاكرة أخيرة (بومودورو 1)", task: "30 دقيقة مذاكرة/مراجعة" },
+            { time: "07:15 م", title: "☕ راحة قصيرة", task: "5 دقائق راحة" },
+            { time: prayerTimes.isha, title: "🕌 صلاة العشاء", task: "صلاة العشاء", prayer: true },
+            { time: "08:00 م", title: "🎯 وقت حر منظم", task: "30 دقيقة للهوايات أو القراءة الحرة" },
+            { time: "08:30 م", title: "📱 استخدام نهائي للجوال", task: "30 دقيقة فقط" },
+            { time: "09:00 م", title: "🧘 استرخاء قبل النوم", task: "قراءة أو تأمل أو أذكار النوم" },
+            { time: "09:30 م", title: "🦷 النظافة المسائية", task: "فرش الأسنان والاستعداد للنوم" },
+            { time: "10:00 م", title: "😴 النوم", task: "النوم مباشرة - 9 ساعات نوم كاملة" }
+        ];
+
+        const extraTasks = [
+            "شرب 2 لتر ماء على مدار اليوم",
+            "تجنب السكريات والمشروبات الغازية",
+            "المشي 10,000 خطوة يومياً",
+            "قراءة 10 صفحات من كتاب",
+            "ممارسة هواية لمدة 20 دقيقة"
+        ];
+
+        function displayDate() {
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const today = new Date().toLocaleDateString('ar-SA', options);
+            document.getElementById('dateDisplay').textContent = today;
+        }
+
+        function getSuggestion(type) {
+            switch(type) {
+                case 'breakfast':
+                    return breakfastOptions[dailyIndex];
+                case 'lunch':
+                    return lunchOptions[dailyIndex];
+                case 'dinner':
+                    return dinnerOptions[dailyIndex];
+                case 'exercise':
+                    return exercises[dailyIndex];
+                default:
+                    return '';
+            }
+        }
+
+        function renderSchedule() {
+            const scheduleDiv = document.getElementById('schedule');
+            scheduleDiv.innerHTML = '<h2 style="color: #667eea; margin-bottom: 20px;">📅 الجدول اليومي</h2>';
+            
+            let taskCounter = 0;
+            
+            dailySchedule.forEach((item, index) => {
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'task';
+                taskDiv.id = `task-${index}`;
+                
+                let content = `
+                    <div class="task-header">
+                        <div>
+                            <div class="task-time">${item.time}</div>
+                            <div class="task-title">${item.title}</div>
+                        </div>
+                        <div class="checkbox-container">
+                            <input type="checkbox" class="checkbox" onchange="toggleTask(${index})">
+                            <span>تم</span>
+                        </div>
+                    </div>
+                    <div style="color: #666;">${item.task}</div>
+                `;
+                
+                if (item.type) {
+                    const suggestion = getSuggestion(item.type);
+                    content += `
+                        <div class="task-suggestion">
+                            <span class="suggestion-label">💡 اقتراح اليوم:</span>
+                            <div style="color: #333;">${suggestion}</div>
+                        </div>
+                    `;
+                }
+                
+                if (item.phone) {
+                    content += `<div style="margin-top: 8px; color: #e74c3c; font-weight: bold;">📱 يشمل استخدام الجوال</div>`;
+                }
+                
+                taskDiv.innerHTML = content;
+                scheduleDiv.appendChild(taskDiv);
+                
+                taskCounter++;
+                
+                // إضافة رسائل تحفيزية بعد مهام معينة
+                if (taskCounter === 5) {
+                    const motivation = document.createElement('div');
+                    motivation.className = 'task';
+                    motivation.style.background = 'linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%)';
+                    motivation.style.borderRight = '5px solid #4caf50';
+                    motivation.innerHTML = `
+                        <div style="text-align: center; padding: 15px;">
+                            <div style="font-size: 2em;">⚡</div>
+                            <div style="font-size: 1.4em; font-weight: bold; color: #2c3e50; margin: 10px 0;">
+                                فخورين بإنجازك يا مهندس!
+                            </div>
+                            <div style="color: #34495e; font-size: 1.1em;">
+                                بدأت يومك بقوة، استمر على هذا المستوى
+                            </div>
+                        </div>
+                    `;
+                    scheduleDiv.appendChild(motivation);
+                } else if (taskCounter === 10) {
+                    const motivation = document.createElement('div');
+                    motivation.className = 'task';
+                    motivation.style.background = 'linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)';
+                    motivation.style.borderRight = '5px solid #9b59b6';
+                    motivation.innerHTML = `
+                        <div style="text-align: center; padding: 15px;">
+                            <div style="font-size: 2em;">🎯</div>
+                            <div style="font-size: 1.4em; font-weight: bold; color: #2c3e50; margin: 10px 0;">
+                                ممتاز! نصف الطريق
+                            </div>
+                            <div style="color: #34495e; font-size: 1.1em;">
+                                انضباطك يبني مستقبلك الهندسي خطوة بخطوة
+                            </div>
+                        </div>
+                    `;
+                    scheduleDiv.appendChild(motivation);
+                } else if (taskCounter === 15) {
+                    const motivation = document.createElement('div');
+                    motivation.className = 'task';
+                    motivation.style.background = 'linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)';
+                    motivation.style.borderRight = '5px solid #e67e22';
+                    motivation.innerHTML = `
+                        <div style="text-align: center; padding: 15px;">
+                            <div style="font-size: 2em;">💪</div>
+                            <div style="font-size: 1.4em; font-weight: bold; color: #2c3e50; margin: 10px 0;">
+                                إنجاز رائع يا بطل!
+                            </div>
+                            <div style="color: #34495e; font-size: 1.1em;">
+                                المهندس الناجح يُبنى بالانضباط اليومي مثلك
+                            </div>
+                        </div>
+                    `;
+                    scheduleDiv.appendChild(motivation);
+                } else if (taskCounter === 20) {
+                    const motivation = document.createElement('div');
+                    motivation.className = 'task';
+                    motivation.style.background = 'linear-gradient(135deg, #ff9a9e 0%, #fecfef 100%)';
+                    motivation.style.borderRight = '5px solid #e91e63';
+                    motivation.innerHTML = `
+                        <div style="text-align: center; padding: 15px;">
+                            <div style="font-size: 2em;">🔥</div>
+                            <div style="font-size: 1.4em; font-weight: bold; color: #2c3e50; margin: 10px 0;">
+                                أنت مذهل! كاد اليوم ينتهي
+                            </div>
+                            <div style="color: #34495e; font-size: 1.1em;">
+                                تصميمك اليوم أقوى من أي دائرة كهربائية ⚡
+                            </div>
+                        </div>
+                    `;
+                    scheduleDiv.appendChild(motivation);
+                }
+            });
+            
+            // رسالة تحفيزية نهاية اليوم
+            const finalMotivation = document.createElement('div');
+            finalMotivation.className = 'task';
+            finalMotivation.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)';
+            finalMotivation.style.borderRight = '5px solid #ffd700';
+            finalMotivation.style.border = '3px solid #ffd700';
+            finalMotivation.innerHTML = `
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 3em;">🏆</div>
+                    <div style="font-size: 1.6em; font-weight: bold; color: white; margin: 15px 0;">
+                        مبروك يا بطل! أكملت يومك بنجاح
+                    </div>
+                    <div style="color: white; font-size: 1.2em; margin: 10px 0;">
+                        💫 أنت قدوة في الانضباط والالتزام
+                    </div>
+                    <div style="color: white; font-size: 1.1em; margin-top: 15px; opacity: 0.95;">
+                        كل يوم تكمله بهذا الانضباط، تقترب خطوة من أحلامك الهندسية
+                    </div>
+                    <div style="color: white; font-size: 1.1em; margin-top: 10px; opacity: 0.95;">
+                        ⚡ استمر وستصبح المهندس الذي تطمح له
+                    </div>
+                </div>
+            `;
+            scheduleDiv.appendChild(finalMotivation);
+        }
+
+        function renderExtraTasks() {
+            const extraTasksDiv = document.getElementById('extraTasksList');
+            extraTasksDiv.innerHTML = '';
+            
+            extraTasks.forEach((task, index) => {
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'extra-task-item';
+                taskDiv.id = `extra-${index}`;
+                taskDiv.innerHTML = `
+                    <span>${task}</span>
+                    <input type="checkbox" class="checkbox" onchange="toggleExtraTask(${index})">
+                `;
+                extraTasksDiv.appendChild(taskDiv);
+            });
+        }
+
+        function toggleTask(index) {
+            const task = document.getElementById(`task-${index}`);
+            task.classList.toggle('completed');
+            updateProgress();
+        }
+        
+        function updateProgress() {
+            const checkboxes = document.querySelectorAll('.schedule .checkbox');
+            const completed = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const total = checkboxes.length;
+            const percentage = (completed / total) * 100;
+            
+            document.getElementById('progressFill').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `${completed}/${total} مهمة`;
+            
+            // تحديث النقاط
+            const pointsDisplay = document.getElementById('totalPoints');
+            if (pointsDisplay) {
+                pointsDisplay.textContent = completed;
+            }
+            
+            // رسائل تحفيزية
+            if (completed === 5) {
+                alert('🎉 ممتاز! أكملت 5 مهام - لك راحة إضافية 15 دقيقة!');
+            } else if (completed === 10) {
+                alert('🎯 رائع! 10 مهام - يمكنك مشاهدة حلقة أو فيلم قصير!');
+            } else if (completed === 15) {
+                alert('🍕 إنجاز عظيم! 15 مهمة - اطلب وجبتك المفضلة!');
+            } else if (completed === total) {
+                alert('⭐ مبروووك! أكملت يومك كاملاً - أنت مهندس منضبط حقاً! 🏆');
+            }
+        }
+
+        function toggleExtraTask(index) {
+            const task = document.getElementById(`extra-${index}`);
+            task.style.opacity = task.style.opacity === '0.5' ? '1' : '0.5';
+        }
+
+        function refreshSuggestions() {
+            dailyIndex = (dailyIndex + 1) % 7;
+            renderSchedule();
+            alert('✨ تم تغيير الاقتراحات اليومية!');
+        }
+
+        displayDate();
+        renderSchedule();
+        renderExtraTasks();
+        
+        // إضافة مستمعي الأحداث للـ checkboxes
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('checkbox')) {
+                updateProgress();
+            }
+        });
+    </script>
+</body>
+</html>
